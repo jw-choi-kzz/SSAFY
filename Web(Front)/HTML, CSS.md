@@ -62,4 +62,13 @@ class가 적용된 모든 태그 선택,HTML 내에서 동일한 클래스 명 �
 첫 번째 요소의 자손인 노드 선택 ```selector1 selector2 { 스타일 속성 }```  
 ##### 자식 결합자 chlid combinator
 첫 번째 요소의 바로 아래 자식인 노드 선택 ```selector1 > selector2 { 스타일 속성 }```  
-
+##### 일반 형제 결합자 general sibling combinator
+첫 번째 요소를 뒤따르면서 같은 부모를 공유하는 두 번째 요소 모두 선택 ```former-element ~ target-element { 스타일 속성 }```  
+##### 인접 형제 결합자 adjacent sibling combinator
+첫 번째 요소의 바로 뒤에 위치하면서 같은 부모 공유하는 두 번째 요소 선택 ```former-element + target-element { 스타일 속성 }```  
+   
+우선순위 = 같은 요소에 두 개 이상의 css 규칙 적용 시 **마지막 규칙, 구체적인 규칙, !important 가 우선 적용**  
+  
+#### 상속 inheritance
+부모 요소에 적용된 스타일이 자식 요소에게 상속 가능  
+상속되는 
