@@ -95,6 +95,20 @@ margin(테두리 밖 외부 여백) - border(테두리) - padding(테두리 안�
   
 #### position
 **position : static** = 일반적인 내용물의 흐름, 상단/좌측에서의 거리 지정 불가  
-**position : relative** = HTML 문서에서의 일반적 내용물 흐름 
-**position : absolute**
-**position : fixed**
+**position : relative** = HTML 문서에서의 일반적 내용물 흐름(top, left)   
+**position : absolute** = 자신의 상위 box 속에서의 top, left, right, bottom 절대적 위치 지정  
+**position : fixed** = 스크롤해도 화면 상 지정된 위치에 있음  
+*z-index 위 아래 배치*   
+  
+#### float
+박스를 어느 위치에 배치할 것인지 결정  
+**float : none** = 기본값, **left** = 요소를 왼쪽으로, **right** = 요소를 오른쪽으로  
+  
+#### clear 
+float 속성이 가지고 있는 값을 초기화하기 위해 사용  
+**none**, **left, right**, **both**  
+  
+### flexbox
+인터페이스 내의 아이템 간 공간 배분, 정렬 기능 제공하기 위한 1차원 레이아웃 모델 설계  
+**Main Axios**(주축), **Cross Axios**(교차축), **start**(시작선), **end**(끝선),  **item**들을 감싸고 있는 **Container**    
+
