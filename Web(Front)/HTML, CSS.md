@@ -92,6 +92,7 @@ margin(테두리 밖 외부 여백) - border(테두리) - padding(테두리 안�
 **display : inline** = content 너비만큼 가로폭 차지(줄 바꿈 x), width/height/margin-top/margin-bottom 지정 불가, line-height로 상하 여백 지정 (ex. span, a, img, input, label, b, e, i, strong)  
 **display : inline-block** = inline처럼 한줄에 표시 가능, block 처럼 width/height/margin 지정 가능  
 **display : none** = 화면에 표시 x, 공간 차지 x ***(visibility : hidden 은 화면 표시 x, 공간 차지 o)***
++) 밑에서 **display : flex** , **display : inline-flex**  
   
 #### position
 **position : static** = 일반적인 내용물의 흐름, 상단/좌측에서의 거리 지정 불가  
@@ -111,4 +112,34 @@ float 속성이 가지고 있는 값을 초기화하기 위해 사용
 ### flexbox
 인터페이스 내의 아이템 간 공간 배분, 정렬 기능 제공하기 위한 1차원 레이아웃 모델 설계  
 **Main Axios**(주축), **Cross Axios**(교차축), **start**(시작선), **end**(끝선),  **item**들을 감싸고 있는 **Container**    
-
+#### Flex container
+display 속성을 이용하여 container 생성  
+**display : flex** = block 성격의 container / **display : inline-flex** = inline 성격의 container  
+**flex-direction : row, row-reverse, column, column-reverse** = container 안의 items 나열 방향  
+**flex-wrap : nowrap, warp, warp-reverse** = container 안의 items 크기가 container 크기보다 클 때 줄 넘김*(wrap)*  
+**flex-flow : row nowrap, column nowrap, row warp** = 방향과 줄 넘김 동시에  
+**justify-content : flex-start, flex-end, center, space-around, space-between, space-evenly** = 메인축의 정렬을 제어  
+*item들을 감싸는 영역간의 거리 일정한 건 around / 시작점부터 사이 간격 일정한건 between / 그냥 모든 간격이 일정한 건 evenly*  
+**align-items : flex-start, flex-end, center, baseline, stretch** = **교차축**의 정렬을 제어 *height가 지정 안되어 있다면 늘리는게 stretch*  
+**align-content** = wrap 속성에 의해 **여러줄 발생한 경우** 교차축 정렬 *(줄들에 대한 정렬)*    
+  
+#### Flex item
+```html
+<div class="flex-container">
+  <div>1</div>
+  <div>2</div>
+  <div>3</div>
+  <div>4</div>
+  <div>5</div>
+</div> 
+```
+```css
+.flex-container > div:nth-child(2){ order: 2; } //(1부터 시작해서) 2번째 자식에게 2번 뒤로 가라
+.flex-container > div:nth-child(3){ order: -2; } //(1부터 시작해서) 2번째 자식에게 2번 뒤로 가라
+.flex-container > div:nth-child(4){ order: 5; } //(1부터 시작해서) 2번째 자식에게 2번 뒤로 가라
+```
+**order** : item 배치 순서 제어(기본은 0, 양수면 뒤로, 음수면 앞으로 이동)  
+**flex-basis** : item 너비 지정  
+**flex-grow** : *여유공간 있을 때 그 공간을 숫자만큼 분배* item 팽창 제어(기본은 0, 음수는 불가, 양수 가능)   
+**flex-shrink** : item 수축 제어 (기본 1, 음수 불가, 양수 가능)  
+**align-self : auto, stretch, flex-start, flex-end, center** : 특정 item 교차 축 정렬 제거  
