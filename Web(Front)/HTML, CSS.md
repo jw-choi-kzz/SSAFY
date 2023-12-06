@@ -71,4 +71,30 @@ class가 적용된 모든 태그 선택,HTML 내에서 동일한 클래스 명 �
   
 #### 상속 inheritance
 부모 요소에 적용된 스타일이 자식 요소에게 상속 가능  
-상속되는 
+요소의 상속되는 속성에 값이 지정되지 않은 경우 = 요소는 부모 요소의 해당 속성 계산 값을 상속받음  
+부모에 어떤 속성 값이 지정되지 않은 경우 = 속성 초기값을 얻음  
+  
+css **크기** 단위 = length, %, auto(width = 100%, height = 0%)  
+css **색상** 단위 = 색상 키워드 대소문자 구분 x, RGB(16진수 표기법, 함수형 표기법)/ HSL(색상, 채도, 명도)  
+**css font** = ```font-family``` 글꼴 지정, ```font-size```, ```font-style```, ```font-variant``` 소문자를 작은 대문자로 변형, ```font-weight``` 글자 굵기 지정  
+**css text**  
+```text-align``` text 정렬 방식, ```text-decoration``` text 장식, ```text-indent``` text-block 안 첫 라인의 들여쓰기, ```text-transform``` text 대문자화, ```white-space``` 엘리먼트 안의 공백, ```vertical-align``` 수직 정렬, ```letter-spacing``` 문자 간 space 간격, ```word-spacing``` 단어 간 간격, ```line-height``` 줄(행) 간격, ```color``` text 색상  
+**background**  
+```background-color```, ```background-image``` 배경 이미지, ```background-attrachment``` 배경 이미지 고정하거나 scroll 여부, ```background-repeat``` 배경 그림 반복 여부, ```background-position``` 배경 그림 위치, ```background-size``` 배경 이미지 크기, ```background-clip``` 배경 적용 범위 조절  
+  
+#### box model
+margin(테두리 밖 외부 여백) - border(테두리) - padding(테두리 안쪽 내부 여백) - 실제 내용  
+**margin** = box의 마진 영역 너비 지정 : 값 1개(모든 면), 2개(상하/좌우), 3개(상/좌우/하), 4개(상,우,하,좌)  
+*margin 0 auto 를 통해 가운데 정렬이 되도록 설정 가능* *마진상쇄 현상*  
+  
+#### display
+**display : block** = 화면 크기 전체의 가로 폭 차지(줄바꿈), 블록 레벨 요소 안에 인라인 레벨 요소 들어갈 수 있음 (ex. div, ui, oi, li, p, hr, form)  
+**display : inline** = content 너비만큼 가로폭 차지(줄 바꿈 x), width/height/margin-top/margin-bottom 지정 불가, line-height로 상하 여백 지정 (ex. span, a, img, input, label, b, e, i, strong)  
+**display : inline-block** = inline처럼 한줄에 표시 가능, block 처럼 width/height/margin 지정 가능  
+**display : none** = 화면에 표시 x, 공간 차지 x ***(visibility : hidden 은 화면 표시 x, 공간 차지 o)***
+  
+#### position
+**position : static** = 일반적인 내용물의 흐름, 상단/좌측에서의 거리 지정 불가  
+**position : relative** = HTML 문서에서의 일반적 내용물 흐름 
+**position : absolute**
+**position : fixed**
