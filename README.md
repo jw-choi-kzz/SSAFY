@@ -19,7 +19,19 @@
 |6| :white_large_square: | ES6, Promise, fetch | |
 |7| :white_large_square: | Bootstrap | |
   
-[APS(기본, 응용)]  
+## APS 기본 
+|파트|진행상태|강의내용|비고|
+| ------ | ------ | ------ | ------ |
+|1-4| :white_large_square: | Array | |
+|5| :white_large_square: | String | |
+|6-7| :white_large_square: | Stack | |
+|8-9| :white_large_square: | Queue | |
+|10| :white_large_square: | LinkedList | |
+|11-12| :white_large_square: | Tree | |
+|13| :white_large_square: | 문제풀이 | |
+
+## APS 응용)  
+
 [Servlet, JSP]  
 [DB(MySql)]  
 [Spring]  
