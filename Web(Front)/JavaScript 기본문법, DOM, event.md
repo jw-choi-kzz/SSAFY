@@ -73,3 +73,26 @@ innerHTML, innerTEXT
   
 ## EVENT
 웹 페이지에서 발생하는 상호작용에 대한 이벤트 발생 -> js를 사용해 DOM에 발생하는 이벤트 감지하고 대응하는 작업 수행  
+키보드 : keyup, keydown, keypress  
+마우스 : click, mousemove, mouseup, mousedown, mouseenter, mouseleave  
+로딩 : load, unload  
+폼 : input, change, blur, focus, submit  
+
+**이벤트 전파** event propagation  
+**캡쳐링** 단계 capturing : 이벤트가 상위 요소에서 하위 요소 방향으로 전파  
+**타깃** 단계 target : 이벤트가 타깃에 도달  
+**버블링** 단계 bubbling : 이벤트가 하위 요소에서 상위 요소 방향으로 전파  
+  
+**고전** 이벤트 처리 방식 = **attribute/ property** 방식으로 등록.  
+on이벤트 종류 형식으로 엘리먼트에 직접 지정(인라인 또는 함수 생성하고 호출)/  
+스크립트에서 이벤트 지정      
+```js
+var btn = document.querySelector("#btn");
+btn.onclick = doAction;
+function doAction(){
+  alert("클릭");
+}
+```  
+타깃 단계와 버블링 단계의 이벤트만 캐치 가능  
+**표준** 이벤트 처리 방식 = ```이벤트요소.addEventListener(이벤트 타입, 이벤트 리스너, [option]);``` 이용  
+타깃 단계, 버블링 단계, **(메서드 3번째 인자로 true 전달해주면) 캡쳐링 단계의 이벤트** 선별적 캐치 가능.  
