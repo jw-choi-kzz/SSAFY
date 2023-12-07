@@ -48,16 +48,28 @@ m1.msg();
 함수 호출 시 매개변수의 영향을 받지 않음... **오버로딩이 안 되고** 덮어쓰기가 됨.   
   
 -----------------
-
+   
+window(전역 객체, 최상위 객체) - 그 밑에 DOM(문서요소: document, ...), BOM(브라우저: navigator, screen, location, frames, history, XHR), JavaScript(Object, Array, Function, ...)  
+  
+#### window 제공 함수
+```window.alert("window 대신 this, self, frames 사용 가능")```   
+**alert** : 경고창  
+**confirm** : 확인창  
+**prompt** : 입력창  
+open : 창을 연다    
+**parseInt, parseFloat** : 문자열을 정수, 실수로 바꿀 때    
+setTimeout, clearTimeout : 몇 초 후에 실행할지  
+setInterval, clearInterval    
+*globalThis : 전역 객체 식별자*  
+   
 ## DOM
-Document Object Model  
-alert
-confirm
-prompt
-open
-parseInt, parseFloat
-setTimeout, clearTimeout
-setInterval, clearInterval  
-
-
+Document Object Model : XML, HTML 문서의 각 항목을 계층으로 표현하여 생성, 변형, 삭제할 수 있도록 돕는 인터페이스  
+```document.getElementById(string)```, ```document.querySelector(css selector)```, ```document.querySelectorAll(css selector) //결과를 배열처럼 사용```   
+createElement(tagName), createTextNode(text) = 만들고  
+appendChild(node), append(string | node) = 추가하고  
+removeChild(node),  
+setAttribute(name, value) = 생성된 element에 속성 추가, 사용자 정의 속성    
+innerHTML, innerTEXT  
+  
 ## EVENT
+웹 페이지에서 발생하는 상호작용에 대한 이벤트 발생 -> js를 사용해 DOM에 발생하는 이벤트 감지하고 대응하는 작업 수행  
