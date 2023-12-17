@@ -16,6 +16,8 @@ Web Application 실행에 필요한 **java** 관련 resource 포함
 Web Application 실행에 필요한 **html, javascript, css, JSP, Image** 등 웹 콘텐츠를 포함  
 web.xml (Web Application 설정파일)은 WebContent > WEB-INF에 위치  
 ### Servlet  
-Server + Applet 합성어  
+Server + Applet(Application + let 작은 프로그램?) 합성어  
+자바를 이용해 웹에서 실행되는 프로그램을 작성, 웹 페이지를 동적으로 생성하는 것  
+이미 만들어진 Servlet API를 활용 : javax.servlet > Interface Servlet, Class GenericServlet. javax.servlet.http > Class HttpServlet  
 
 Servlet parameter  
