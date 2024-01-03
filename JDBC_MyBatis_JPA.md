@@ -40,4 +40,12 @@ JDBC의 불편함 해소
 ## 구성
 환경설정 파일, Mapper, Mapped Statement, Input,Output, SqlSessionFactory 인스턴스를 사용하는 SqlSession  
 ### Mapper
-dao와 연결(id는 dao와 맞춰야 함) 반환타입 결정, 
+dao와 연결(id는 dao와 맞춰야 함) 반환타입 결정, 미리 column과 dto에서 사용되는 이름 <resultMap>으로 매핑: ```<result column="view_cnt" property="viewCnt"/>```
+   
+-----------------------
+  
+# JPA
+Java Persistence API  
+자바 진영에서 ORM 기술 표준으로 사용하는 인터페이스 모음   
+*ORM(DB와 실제 객체 간 간격을 매핑하는 Object Relational Mapping)*  
+
