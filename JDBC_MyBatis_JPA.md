@@ -32,4 +32,12 @@ Singleton pattern 적용
 * *BoardDaoImpl 에서 DBUtil 사용 필요*. ```private DBUtil util = DBUtil.getInstance();```  
 * *try ~ catch ~ finally에서 종료는 항상 finally 부분에 써줄 것*
 * *BoardDaoImpl에서 insertBoard는 VALUES (?,?,?) 처럼 '?'기호 사용 가능. 미완성 SQL문과 Connection 속 prepareStatement method로 가져오고, setString에서 get뭐시기를 통해 ? 부분을 채운다*
-* 
+   
+-----------------------
+  
+# MyBatis
+JDBC의 불편함 해소  
+## 구성
+환경설정 파일, Mapper, Mapped Statement, Input,Output, SqlSessionFactory 인스턴스를 사용하는 SqlSession  
+### Mapper
+dao와 연결(id는 dao와 맞춰야 함) 반환타입 결정, 
