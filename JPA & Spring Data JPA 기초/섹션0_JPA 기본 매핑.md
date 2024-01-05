@@ -57,9 +57,129 @@ EntityManager를 이용하여 DB 연동 처리. **쿼리 작성 없이** 객체 
 ```@Entity``` 적용해야 함. ```@Id``` 적용해야 함.  
 인자 없는 기본 생성자 필요. 접근은 public 또는 protected.  
 final이면 안 됨. 최상위 클래스여야 함.  
-
+  
+## 접근 타입
+**필드 접근**: 필드 값을 사용해서 매핑  
+**프로퍼티 접근**: getter/setter 메서드를 사용해서 매핑  
+### 설정 방법
+* ```@Id``` 어노테이션을 어디에 붙였는가?
+  * **field**에 붙이면 필드 접근, **getter** method에 붙이면 프로퍼티 접근    
+* ```@Access``` 어노테이션을 사용해서 명시적으로 지정: ```@Access(AccessType.PROPERTY)```, ```@Access(AccessType.FIELD)```
+  * Class, 개별 field에 적용 가능 
+  
 # 05 엔티티 식별자 생성 방식
+직접 할당/ 식별 칼럼 방식/ 시퀀스 사용 방식/ 테이블 사용 방식  
+## 직접 생성 방식
+* ```@Id``` 설정 대상에 직접 값 설정: 사용자가 입력한 값, 규칙에 따라 생성한 값 등  
+* 저장하기 전에 생성자 할당, 보통 생성 시점에 전달  
+## 식별 칼럼 방식
+* DB의 식별 칼럼에 매핑 *ex) MySQL 자동 증가 컬럼*   
+  * *DB가 식별자를 생성하기 때문에 객체 생성시에 식별값을 설정하지 않음*  
+* ```@GeneratedValue(strategy= GenerationType.IDENTITY)``` 설정   
+* INSERT 쿼리 실행해야 식별자 알 수 있음  
+  * EntityManager #persist() 호출 시점에 INSERT 쿼리 실행. persist() 실행 시 객체에 식별자 값 할당됨  
+```java
+@Entity
+public class Review {
+  @GeneratedValue(strategy= GenerationType.IDENTITY)
+  private Long id;
+~~
+}
 
+Review review - new Review(5, "H-01", ~); //객체 생성 시점에는 식별자를 따로 지정하지 않고
+entityManager.persist(review); //저장(persist 메서드) 시점에 INSERT 쿼리 바로 실행
+Long genId = review.getId(); //persist() 이후 식별자 사용 가능  
+```  
+## 시퀀스 사용 방식
+* 시퀀스를 사용해서 식별자 생성: JPA가 식별자 생성 처리 -> 객체 생성 시에 식별값을 설정하지 않음  
+* ```@SequenceGenerator```로 시퀀스 생성기 설정, ```@GeneratedValue의 generator로 시퀀스 생성기 지움
+* EntityManager #persist() 호출 시점에 시퀀스 사용
+  * ```persist()``` 실행할 때 객체에 식별자 값 할당됨
+  * INSERT 쿼리는 실행하지 않음
+```java
+@Entity
+@Table(schema ="crm", name= "activity_log")
+public class ActivityLog {
+  @Id
+  @SequenceGenerator(
+    name= "log_seq_gen",//이것과
+    sequenceName= "activity_seq",
+    schema= "crm",
+    allocationSize= 1 //1로 지정해야 한다!!! 높게 하면 중복 시퀀스 생성 문제 발생
+)
+@GeneratedValue(generator= "log_seq_gen")//이것이 같은 이름 사용
+private Long id;
+~
+}
+```  
+## 테이블 사용 방식
+* 테이블을 시퀀스처럼 사용  
+  * 테이블에 엔티티를 위한 키 보관. 해당 테이블을 이용해서 다음 식별자 생성  
+* ```@TableGenerator```로 테이블 생성기 설정, ```@GeneratedValue```의 generator로 테이블 생성기 지정
+* EntityManager #persist() 호출 시점에 테이블 사용: ```persist()``` 할 때 테이블을 이용해서 식별자 구하고 엔티티에 할당. INSERT 쿼리는 실행하지 않음  
+```MySQL
+create table id_seq (
+  entity varchar(100) not null primary key,
+  nextvalbigint
+)
+```
+```java
+@TableGenerator(
+table= "id_seq",
+pkColumnName= "entity",
+valueColumnName= "nextval",
+~~
+)
+
+@GeneratedValue(generator= "accessIdGen")
+private Long id;
+```  
+   
 # 06 @Embeddable
+엔티티가 아닌 타입을 한 개 이상의 필드와 매핑할 때 사용  
+엔티티의 한 속성으로 ```@Embeddable``` 적용 타입 사용  
+```java
+@Embeddable
+public class Address {
+}
 
+@Entity
+@Table(name = "hotel_info")
+public class Hotel {
+  @Id
+  @Column(name= "hotel_id")
+  private String id;
+  ~
+  @Embedded
+  private Address address;
+}
+```
+  
 # 07 @Embeddable 다른 테이블에 매핑하기
+## 방법 1 @SecondaryTable(name="테이블명")
+```java
+@Embeddable
+public class Intro {
+  @Column(table= "writer_intro", name= "content_type")
+  private String contentType;
+
+  @Column(table= "writer_intro")
+  private String content;
+  ...
+}
+
+@Entity
+@SecondaryTable(name= "writer_intro", pkJoinColumns= @PrimaryKeyColumn( name= "writer_id", referencedColumnName= "id"))
+public class Writer {
+  ...
+  @Embedded
+  private Intro intro;
+}
+```
+## 방법 2 @SecondaryTable + @AttributeOverride
+*여러 곳에서 사용하게 될 Address는 Table에 이름을 박기가 어렵다*  
+```java
+@AttributeOverrides({
+  @AttributeOverride({
+    @AttributeOverride([name= "address"]
+```
