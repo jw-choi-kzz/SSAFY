@@ -23,6 +23,12 @@ EntityManager를 이용하여 DB 연동 처리. **쿼리 작성 없이** 객체 
 *이런 과정은 spring이 대부분 해준다..*  
 
 # 03 엔티티 CRUD 처리
+## EntityManager가 제공하는 메서드
+```persist()``` : 저장  
+```find()``` : 조회  
+```remove()``` : 삭제  
++) merge()
+**변경은 transaction 안에서 해야 한다**
 
 # 04 엔티티 매핑 설정
 
