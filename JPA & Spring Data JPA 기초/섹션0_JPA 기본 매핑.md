@@ -1,3 +1,6 @@
+> inflearn 강의명 : JPA & Spring Data JPA 기초   
+> 섹션 0 JPA 기본 매핑의 01~07번까지 정리    
+
 JPA Java(2.2)/Jakarta(3.0) Persistence API      
 자바 객체와 관계형 DB 간의 매핑 처리를 위한 API  
   
@@ -153,14 +156,20 @@ public class Hotel {
   @Embedded
   private Address address;
 }
-```
+```  
+null을 넣으면 address에 매핑된 모든 것이 null  
+같은 ```@Embeddable``` 타입 필드가 2개면 Repeated column Error 발생  
+```@AttributeOverride```로 설정 재정의 : ```@AttributeOverrides```` 안에 ```@AttributeOverride(name="address1이라는 이름으로", column = @Column(name="waddr1라는 이름의 column에 넣겠다"))```   
+**@Embeddable을 사용하면 모델을 더 잘 표현할 수 있음 *(개별 속성을 모으는 것보다 타입으로 더 쉽게 이해하는 것)***  
   
 # 07 @Embeddable 다른 테이블에 매핑하기
+*엔티티가 아닌 값(개념적으로 value일 때)을 다른 테이블에 저장할 때 사용. 1-1 관계인 두 테이블 매핑 시 종종 등장*   
 ## 방법 1 @SecondaryTable(name="테이블명")
 ```java
+//@SecondaryTable 사용과 @Embeddable에 테이블명을 직접 명시하는 것
 @Embeddable
 public class Intro {
-  @Column(table= "writer_intro", name= "content_type")
+  @Column(table= "writer_intro", name= "content_type") //writer_intro 테이블에 content_type 이름의 Column 사용
   private String contentType;
 
   @Column(table= "writer_intro")
@@ -169,17 +178,29 @@ public class Intro {
 }
 
 @Entity
-@SecondaryTable(name= "writer_intro", pkJoinColumns= @PrimaryKeyColumn( name= "writer_id", referencedColumnName= "id"))
+@SecondaryTable(name= "writer_intro",
+  pkJoinColumns= @PrimaryKeyColumn(
+    name= "writer_id", //writer_intro 테이블의 column이고
+    referencedColumnName= "id" //writer 테이블의 column 지정
+    //join 대상이 되는 column을 지정 해주는 것
+  )
+)
 public class Writer {
   ...
   @Embedded
   private Intro intro;
 }
 ```
-## 방법 2 @SecondaryTable + @AttributeOverride
+## 방법 2 @SecondaryTable + @AttributeOverride 
 *여러 곳에서 사용하게 될 Address는 Table에 이름을 박기가 어렵다*  
 ```java
+@Embedded
 @AttributeOverrides({
-  @AttributeOverride({
-    @AttributeOverride([name= "address"]
+  @AttributeOverride(name= "address1",
+                     column= @Column(table= "writer_address", name= "add1")), //column 어노테이션에서 name을 지정해준다
+...
+})
+private Address address;
 ```
+객체 생성 시 ```Writer w = new Writer("name", new Address("주소1", "주소2", "12345"), new Intro("text/plane", "소개글"));```  
+**Embedded 된 테이블에 대해서는 left join을 사용해야 조회가 가능하다**  
