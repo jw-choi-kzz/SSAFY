@@ -379,3 +379,142 @@ server.servlet.jsp.init-parameters.development=true
 <!-- json simple  -->
 ///출처: https://fvor001.tistory.com/123 [Dev Log:티스토리]
 ```
+   
+--------------------------------------------
+  
+# Spring Boot에서 WebSocket 구축 및 사용하기
+**[Browser > Server]**: HTTP 사용자 요청 - 서버 응답하면 연결 끊김. 페이지 이동 있음.  
+**[XMLHttpRequest > Server]**: XMLHttpRequest 객체가 서버에 요청하는 방식으로 서버와 연결. Json이나 xml 형태로 필요한 데이터만 주고 받을 수 있고, 변경이 필요하면 해당 페이지 내에서 변경 가능.  
+**WebSocket**: Stateful Protocol. 서버와 클라이언트 간의 연결을 항상 유지. 비정상적으로 연결이 끊어졌을 깨 대응 필요.
+  
+**어노테이션 ```@ServerEndpoint``` 선언 클래스**와 **WebSocket 환경 설정 파일**  
+## 1. websocket 의존성 추가
+```implementation 'org.springframework.boot:spring-boot-starter-websocket'```  
+## 2. WebSocketConfig > Bean 생성
+```java
+@Component
+public class WebSocketConfig {
+
+    @Bean
+    public ServerEndpointExporter serverEndpointExporter() {
+        /*
+            2022.10.26[프뚜]:
+                Spring에서 Bean은 싱글톤으로 관리되지만,
+                @ServerEndpoint 클래스는 WebSocket이 생성될 때마다 인스턴스가 생성되고
+                JWA에 의해 관리되기 때문에 Spring의 @Autowired가 설정된 멤버들이 초기화 되지 않습니다.
+                연결해주고 초기화해주는 클래스가 필요합니다.
+         */
+        return new ServerEndpointExporter();
+    }
+}
+```
+## 3. WebSocket 구현하기
+WebSocketChatting 클래스에 ```@ServerEndpoint(value = "/chatt"), @Service``` 어노테이션 붙여서 서비스 등록  
+```@OnOpen```: 사용자가 접속하면 session 추가 / ```@OnClose```: 사용자가 종료되면 session 제거    
+```@OnMessage```: 사용자가 입력한 메세지를 받고, 접속되어 있는 사용자에게 메세지 전송  
+  
+```java
+@ServerEndpoint(value = "/chatt")
+@Service
+public class WebSocketChatting {
+
+    private static Set<Session> CLIENTS = Collections.synchronizedSet(new HashSet<>()); //사용자를 관리할 수 있는 Set 전역변수 선언
+
+    @OnOpen
+    public void onOpen(Session session) {
+        System.out.println(session.toString());
+
+        if (CLIENTS.contains(session)) {
+            System.out.println("[프뚜] 이미 연결된 세션입니다. > " + session);
+        } else {
+            CLIENTS.add(session);
+            System.out.println("[프뚜] 새로운 세션입니다. > " + session);
+        }
+    }
+
+    @OnClose
+    public void onClose(Session session) throws Exception {
+        CLIENTS.remove(session);
+        System.out.println("[프뚜] 세션을 닫습니다. : " + session);
+    }
+
+    @OnMessage
+    public void onMessage(String message, Session session) throws Exception {
+        System.out.println("[프뚜] 입력된 메세지입니다. > " + message);
+
+        for (Session client : CLIENTS) {
+            System.out.println("[프뚜] 메세지를 전달합니다. > " + message);
+            client.getBasicRemote().sendText(message);
+        }
+    }
+}
+```
+## 4. WebSocket과 연동되는 js 구현하기
+Server에서 sendText를 받을 수 있는 function 선언, 사용자가 Server에 메세지를 보내는 함수 선언.  
+```js
+let ws;
+const mid = getId('mid');
+const btnLogin = getId('btnLogin');
+const btnSend = getId('btnSend');
+const talk = getId('talk');
+const msg = getId('msg');
+
+// 2022.10.26[프뚜]: 전송 데이터(JSON)
+const data = {};
+
+function getId(id) {
+    return document.getElementById(id);
+}
+
+btnLogin.onclick = function() {
+    // 2022.10.26[프뚜]: 서버와 webSocket 연결 
+    ws = new WebSocket("ws://" + location.host + "/chatt"); //@ServerEndpoint의 value값으로 연결. 
+
+    // 2022.10.26[프뚜]: 서버에서 받은 메세지 처리
+    ws.onmessage = function(msg) { //Server에서 sendText를 받을 수 있는 function 선언
+        const data = JSON.parse(msg.data);
+        let css;
+
+        if (data.mid === mid.value) {
+            css = 'class=me';
+        } else {
+            css = 'class=other';
+        }
+
+        const item = `<div ${css} >
+		                <span><b>${data.mid}</b></span> [ ${data.date} ]<br/>
+                      <span>${data.msg}</span>
+						</div>`;
+
+        talk.innerHTML += item;
+
+        // 2022.10.26[프뚜]: 스크롤바 하단으로 이동
+        talk.scrollTop=talk.scrollHeight;
+    }
+}
+
+msg.onkeyup = function(ev) {
+    if (ev.keyCode === 13) {
+        send();
+    }
+}
+
+btnSend.onclick = function() {
+    send();
+}
+
+function send() { //사용자가 Server에 메세지를 보내는 함수 선언
+    if (msg.value.trim() !== '') {
+        data.mid = getId('mid').value;
+        data.msg = msg.value;
+        data.date = new Date().toLocaleString();
+        const temp = JSON.stringify(data);
+        ws.send(temp);
+    } 
+    msg.value = '';
+}
+```
+  
++) https://github.com/JeongSeongSoo/spring-tistory  
+  
+https://ssjeong.tistory.com/entry/JAVA-Spring-Boot%EC%97%90%EC%84%9C-WebSocket-%EA%B5%AC%EC%B6%95-%EB%B0%8F-%EC%82%AC%EC%9A%A9%ED%95%98%EA%B8%B0
