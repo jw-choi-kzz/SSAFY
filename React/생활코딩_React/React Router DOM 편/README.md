@@ -6,4 +6,4 @@
 - 4 장
   - Link ✅
 - 5 ~ 6 장
-  - Nested Routing ⬜, 수업을 마치며 ⬜
+  - Nested Routing ✅, 수업을 마치며 ✅
