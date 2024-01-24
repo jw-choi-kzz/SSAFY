@@ -6,8 +6,8 @@
 - 6 ~ 7 장 
   - 이벤트 ✅, state ✅
 - 8 장 
-  - Create ⬜
+  - Create ✅
 - 9 ~ 10 장 
-  - Update ⬜, Delete ⬜
+  - Update ✅, Delete ✅
   
 https://wikibook.github.io/react-rev/react.html  
