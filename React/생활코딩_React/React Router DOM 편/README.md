@@ -4,6 +4,6 @@
 - 3 장
   - Router ✅
 - 4 장
-  - Link ⬜
+  - Link ✅
 - 5 ~ 6 장
   - Nested Routing ⬜, 수업을 마치며 ⬜
